@@ -61,6 +61,7 @@ namespace FSMAssessment
                 CheckDead();
             }
         }
+
         /// <summary>
         /// Function runs through list and sorts list according to speed of every player
         /// </summary>
