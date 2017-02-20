@@ -18,14 +18,12 @@ namespace FSMAssessment
     }
     public partial class Form1 : Form
     {
-        int potionlimit = 0;
-        private bool buttonWasClicked = false;
-        public static Form1 _Form1;
+        GameManager gm = GameManager.Instance; //Shortens code a little bit
+        int potionlimit = 0;//Number of potions used..Max is 3
 
         public Form1()
         {
             InitializeComponent();
-            _Form1 = this;
             SetUpForm();
         }
 
@@ -35,12 +33,8 @@ namespace FSMAssessment
             GameManager.Instance.Players.Reverse();
             GameManager.Instance.turnManager.ToStartUp();
             GameManager.Instance.currentState = GameManager.Instance.stateSystem.Start();
-            UpdateHealthBar();
-            SetMaxHealthBar();
             DataManager<List<Player>>.Serialize("ListofPlayersDefualt", GameManager.Instance.Players);
-            UpdateNames();
-            UpdateLvl();
-            UpdateHealthBar();
+            UpdateUI();
         }
 
         /// <summary>
@@ -54,42 +48,12 @@ namespace FSMAssessment
             StateFunctions();
             GameManager.Instance.stateSystem.ChangeState("IDLE");
         }
-
-        /// <summary>
-        /// Enables to sync the heath bars of players anywhere else in the project
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="healthbarname"></param>
-        public void UpdateHealthBar()
-        {
-            PlayerHealth.Value = GameManager.Instance.CurrentPlayer.Health;
-            EnemyHealth.Value = GameManager.Instance.CurrentEnemy.Health;
-        }
-
-        public void SetMaxHealthBar()
-        {
-            PlayerHealth.Maximum = GameManager.Instance.CurrentPlayer.MaxHealth;
-            EnemyHealth.Maximum = GameManager.Instance.CurrentEnemy.MaxHealth;
-        }
-
-        public void UpdateLvl()
-        {
-            Playerlvl.Text = "LVL: " + GameManager.Instance.CurrentPlayer.Lvl.ToString();
-            Enemylvl.Text = "LVL: " + GameManager.Instance.CurrentEnemy.Lvl.ToString();
-        }
-
-        public void UpdateNames()
-        {
-            EnemyName.Text = GameManager.Instance.CurrentEnemy.Name;
-            PlayerName.Text = GameManager.Instance.CurrentPlayer.Name;
-        }
-
+        
         /// <summary>
         /// Certain function is called depending on current state
         /// </summary>
         private void StateFunctions()
         {
-            GameManager gm = GameManager.Instance;
             switch (gm.currentState)
             {
                 case "INIT":
@@ -112,6 +76,36 @@ namespace FSMAssessment
             TextLog.SelectionStart = TextLog.Text.Length;
             TextLog.ScrollToCaret();
         }
+
+        /// <summary>
+        /// Updates various visual information about the players
+        /// </summary>
+        public void UpdateUI()
+        {
+            //Update Names
+            EnemyName.Text = GameManager.Instance.CurrentEnemy.Name;
+            PlayerName.Text = GameManager.Instance.CurrentPlayer.Name;
+            //Update Health
+            PlayerHealth.Value = GameManager.Instance.CurrentPlayer.Health;
+            EnemyHealth.Value = GameManager.Instance.CurrentEnemy.Health;
+            //Update Lvl
+            Playerlvl.Text = "LVL: " + GameManager.Instance.CurrentPlayer.Lvl.ToString();
+            Enemylvl.Text = "LVL: " + GameManager.Instance.CurrentEnemy.Lvl.ToString();
+
+        }
+
+        /// <summary>
+        /// Enables: Atk, Potion, and PassTurn
+        /// </summary>
+        public void EnableButtons()
+        {
+            AtkButton.Enabled = true;
+            PassTurn.Enabled = true;
+            if (potionlimit <= 2)
+                PotionButton.Enabled = true;
+        }
+
+        //Text Logs
 
         /// <summary>
         /// Displays about the game
@@ -156,23 +150,6 @@ namespace FSMAssessment
         }
 
         /// <summary>
-        /// Restores a player's health a limited amount of times
-        /// </summary>
-        /// <param name="player"></param>
-        public void PotionUse(Player player)
-        {
-            potionlimit += 1;
-            if (potionlimit < 3)
-            {
-                player.Heal(player.MaxHealth - player.Health);
-                UpdateHealthBar();
-            }
-            else
-                PotionButton.Enabled = false;
-            TextLog.AppendText("Player has healed and now has used " + (potionlimit) + " potions. \n");
-        }
-
-        /// <summary>
         /// Enables the ability to add a message on the rich text document anywhere in the project
         /// </summary>
         /// <param name="message"></param>
@@ -181,37 +158,23 @@ namespace FSMAssessment
             TextLog.AppendText("\n" + message);
         }
 
-        /// <summary>
-        /// Enables a button press if diabled and disables a button press 
-        /// if enabled when called depending on string name given
-        /// </summary>
-        /// <param name="buttonname"></param>
-        public void ButtonEnable(string buttonname)
-        {
-            if (buttonname == AtkButton.Name)
-            {
-                AtkButton.Enabled = !AtkButton.Enabled;
-            }
-            if (buttonname == PotionButton.Name)
-            {
-                PotionButton.Enabled = !PotionButton.Enabled;
-            }
-        }
+        //Button Uses
 
         /// <summary>
-        /// Changes if a button was clicked 
-        /// Don't need atm 
+        /// Restores a player's health a limited amount of times
         /// </summary>
-        /// <returns></returns>
-        public bool CheckEndButton()
+        /// <param name="player"></param>
+        public void PotionUse(Player player)
         {
-            if (buttonWasClicked == true)
+            potionlimit += 1;
+            if (potionlimit < 3)
             {
-                buttonWasClicked = false;
-                return true;
+                player.Heal(100 - player.Health);
+                UpdateUI();
             }
             else
-                return false;
+                PotionButton.Enabled = false;
+            TextLog.AppendText("Player has healed and now has used " + (potionlimit) + " potions. \n");
         }
 
         /// <summary>
@@ -221,8 +184,6 @@ namespace FSMAssessment
         /// <param name="e"></param>
         private void AtkButton_Click(object sender, EventArgs e)
         {
-            GameManager gm = GameManager.Instance;
-
             gm.stateSystem.ChangeState("TURN");
             StateFunctions();
 
@@ -231,9 +192,7 @@ namespace FSMAssessment
             StateFunctions();
             gm.stateSystem.ChangeState("ENDTURN");
             StateFunctions();
-            UpdateNames();
-            UpdateLvl();
-            UpdateHealthBar();
+            UpdateUI();
             TextLog.Text = gm.combat.combatLog;
             Endlog();
         }
@@ -245,7 +204,6 @@ namespace FSMAssessment
         /// <param name="e"></param>
         private void PassTurn_Click(object sender, EventArgs e)
         {
-            GameManager gm = GameManager.Instance;
             if (!gm.CurrentEnemy.IsDead)
                 gm.combat.PassAttack(gm.CurrentPlayer, gm.CurrentEnemy);
             else
@@ -253,10 +211,20 @@ namespace FSMAssessment
             gm.stateSystem.ChangeState("ENDTURN");
             StateFunctions();
 
-            UpdateNames();
-            UpdateHealthBar();
+            UpdateUI();
             TextLog.Text = gm.combat.combatLog;
             Endlog();
+        }
+
+        /// <summary>
+        /// Function that gives user full health and keeps track of how many are left
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Potion_Click(object sender, EventArgs e)
+        {
+            PotionUse(GameManager.Instance.CurrentPlayer);
+            UpdateUI();
         }
 
         //Other buttons
@@ -268,24 +236,14 @@ namespace FSMAssessment
         /// <param name="e"></param>
         private void LoadButton_Click(object sender, EventArgs e)
         {
-            GameManager gm = GameManager.Instance;
-
-            //Loads previously saved information assuming files have been already created
             Debug.WriteLine("Loading previous save...");
-            // gm.Players.ForEach(x =>DataManager<Player>.Deserialize(x.Name));
-            //   gm.Players = DataManager<List<Player>>.Deserialize("ListofPlayers");
             //Reloads how many potions have been used and reallows the ability to attack
             potionlimit = DataManager<int>.Deserialize("PotionUse");
-            if (potionlimit <= 2) PotionButton.Enabled = true;
-
             gm.CurrentPlayer = DataManager<Player>.Deserialize("CurrentPlayer");
             gm.CurrentEnemy = DataManager<Player>.Deserialize("CurrentEnemy");
-            SetMaxHealthBar();
-            UpdateHealthBar();
-            UpdateNames();
-            UpdateLvl();
-            AtkButton.Enabled = true;
-            PassTurn.Enabled = true;
+            EnableButtons();
+            UpdateUI();
+
 
             TextLog.AppendText("Previous Save Loaded... \n");
             Debug.WriteLine("Previous Save Loaded");
@@ -300,17 +258,10 @@ namespace FSMAssessment
         /// <param name="e"></param>
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            GameManager gm = GameManager.Instance;
-
             //Saves information on an xml file to be read later to be loaded
             Debug.WriteLine("Saving current progress...");
             DataManager<Player>.Serialize("CurrentPlayer", gm.CurrentPlayer);
             DataManager<Player>.Serialize("CurrentEnemy", gm.CurrentEnemy);
-
-            //Lambda version of serializing all the players
-            //"x" represents a "token" player and goes through the entire list of players to serialize with the file name being
-            // "x.name" which will be the players name and saves the player of the class 
-            // gm.Players.ForEach(x => DataManager<Player>.Serialize(x.Name, x));
 
             DataManager<int>.Serialize("PotionUse", potionlimit);
             DataManager<string>.Serialize("TextLog", TextLog.Text);
@@ -325,8 +276,6 @@ namespace FSMAssessment
         /// <param name="e"></param>
         private void ResetButton_Click(object sender, EventArgs e)
         {
-            GameManager gm = GameManager.Instance;
-
             //Resets data
 
             gm.Players = DataManager<List<Player>>.Deserialize("ListofPlayersDefualt");
@@ -334,37 +283,18 @@ namespace FSMAssessment
             DataManager<int>.Serialize("PotionUse", potionlimit = 0);
 
             //Loads the reseted data
-
             gm.CurrentPlayer = gm.Players[0];
             gm.CurrentEnemy = gm.Players[1];
 
-
-            SetMaxHealthBar();
-            UpdateHealthBar();
-            UpdateNames();
-            UpdateLvl();
+            UpdateUI();
 
             potionlimit = DataManager<int>.Deserialize("PotionUse");
             TextLog.Text = DataManager<string>.Deserialize("TextLog");
-            AtkButton.Enabled = true;
-            PotionButton.Enabled = true;
-            PassTurn.Enabled = true;
+            EnableButtons();
             TextLog.Text = "Data has been reset...";
             Debug.WriteLine("Data has reset...");
         }
-
-
-        /// <summary>
-        /// Function that gives user full health and keeps track of how many are left
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Potion_Click(object sender, EventArgs e)
-        {
-            PotionUse(GameManager.Instance.CurrentPlayer);
-            UpdateHealthBar();
-        }
-
+        
         /// <summary>
         /// Redisplays how to play the game
         /// </summary>

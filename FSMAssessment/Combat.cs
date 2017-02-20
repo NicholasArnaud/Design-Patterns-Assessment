@@ -40,7 +40,7 @@ namespace FSMAssessment
             //Runs just the enemy's attack 
             target.Attack(player);
             turntoken = 0;
-            combatLog += target.Name + " has attacked " + player.Name + " for " + (target.crit + target.Power).ToString() + " damage \n";
+            combatLog += target.Name + " has attacked " + player.Name + " for " + (target.m_crit + target.Power).ToString() + " damage \n";
             Debug.WriteLine("Attacked");
             if (player.IsDead)
             {
@@ -56,7 +56,7 @@ namespace FSMAssessment
             if (current.Health != 0 && target.Health != 0)
             {
                 current.Attack(target);
-                combatLog += current.Name + " has attacked " + target.Name + " for " + (current.crit + current.Power).ToString() + " damage \n";
+                combatLog += current.Name + " has attacked " + target.Name + " for " + (current.m_crit + current.Power).ToString() + " damage \n";
                 turntoken += 1;
             }
 
@@ -65,7 +65,7 @@ namespace FSMAssessment
             {
                 target.Attack(current);
                 turntoken = 0;
-                combatLog += target.Name + " has attacked " + current.Name + " for " + (target.crit + target.Power).ToString() + " damage \n";
+                combatLog += target.Name + " has attacked " + current.Name + " for " + (target.m_crit + target.Power).ToString() + " damage \n";
             }
             Debug.WriteLine("Attacked");
             //runs death function if the current player is dead or the enemy is dead

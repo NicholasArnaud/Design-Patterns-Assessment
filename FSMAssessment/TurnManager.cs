@@ -5,13 +5,21 @@ namespace FSMAssessment
 {
     public class TurnManager
     {
-        int pCountCheck = 0;
-        int playernum = 0;
+        
+        int playernum = 0;//The number of the current player in the list
+
+        /// <summary>
+        /// Tis but a constructor
+        /// </summary>
         public TurnManager()
         {
             //Constructor
         }
 
+        /// <summary>
+        /// Function starts game and sets to the IDLE state while
+        /// setting up the first two players in the list
+        /// </summary>
         public void ToStartUp()
         {
 
@@ -21,6 +29,9 @@ namespace FSMAssessment
             GameManager.Instance.CurrentEnemy = GameManager.Instance.Players[1];
         }
 
+        /// <summary>
+        /// Function checks between turns if any current player is dead or there are no more players left
+        /// </summary>
         public void ToIdle()
         {
             GameManager gm = GameManager.Instance;
@@ -34,7 +45,6 @@ namespace FSMAssessment
                     playernum += 1;
                     gm.combat.ChangePlayer(gm.Players[playernum]);
                 }
-                Form1._Form1.SetMaxHealthBar();
             }
             if (gm.CurrentEnemy.IsDead && playernum != gm.Players.Count -1)
             {
@@ -45,18 +55,17 @@ namespace FSMAssessment
                     playernum += 1;
                     gm.combat.ChangeEnemy(gm.Players[playernum]);
                 }
-                Form1._Form1.SetMaxHealthBar();
             }
             if (playernum == gm.Players.Count -1)
             {
                 CheckDead();
             }
         }
-
+        /// <summary>
+        /// Function runs through list and sorts list according to speed of every player
+        /// </summary>
         public void ToChoosePlayer()
         {
-            pCountCheck++;
-            if (pCountCheck == GameManager.Instance.Players.Count) pCountCheck = 0;
             Debug.WriteLine("Choosing Player Turns");
             Debug.WriteLine("Turn Order: ");
             // Lambda function to iterate through the entire length of the list and prints the order of 
@@ -67,6 +76,10 @@ namespace FSMAssessment
             Debug.WriteLine("Current Enemy is: " + GameManager.Instance.CurrentEnemy.Name);
         }
 
+        /// <summary>
+        /// Simple function that checks if the last current player is dead
+        /// </summary>
+        /// <returns></returns>
         public bool CheckDead()
         {
             if (GameManager.Instance.CurrentPlayer.IsDead == true)
@@ -80,11 +93,13 @@ namespace FSMAssessment
             return false;
         }
 
+        /// <summary>
+        /// Function that goes to the IDLE state after the end of the turn process
+        /// </summary>
         public void ToEndTurn()
         {
             GameManager.Instance.currentState = "IDLE";
             ToIdle();
-            Form1._Form1.UpdateLog("\n" + "End of Turn" + "\n");
             Debug.WriteLine("Ending Turn");
         }
     }

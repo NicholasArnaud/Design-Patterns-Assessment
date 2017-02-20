@@ -12,26 +12,20 @@ namespace FSMAssessment
         { //Constructor
         }
 
-        public Player(string Name, int Health, int Power, float Speed, int CritMax)
+        public Player(string name, int power, float speed, int critmax)
         {
             //sets all variables for the player on creation
-            m_name = Name;
-            m_health = Health;
-            m_power = Power;
-            m_speed = Speed;
-            m_maxHealth = m_health;
-            m_critMax = CritMax;
+            m_name = name;
+            m_power = power;
+            m_speed = speed;
+            m_critMax = critmax;
+            m_health = 100;
             m_lvl = 1;
             GameManager.Instance.Players.Add(this);
         }
 
 
         //getters and setters for variables outside the class for public use
-        public int MaxHealth
-        {
-            get { return m_maxHealth; }
-            set { m_maxHealth = value; }
-        }
         public int Health
         {
             get { return m_health; }
@@ -98,27 +92,26 @@ namespace FSMAssessment
         public void Attack(Player target)
         {
             Random rnd = new Random();
-            crit = rnd.Next(0, CritMax);
-            int damage = m_power + crit;
+            m_crit = rnd.Next(0, CritMax);
+            int damage = m_power + m_crit;
             target.TakeDamage(damage);
         }
 
         public void Lvling()
         {
-            m_health = m_maxHealth;
-            if (Lvl % 2 == 0)
+            m_health += 100 - m_health;
+            if (m_lvl % 2 == 0)
             {
-                CritMax += 4;
+                m_critMax += 4;
                 Power += 1;
             }
         }
 
 
         private int m_lvl;
-        public int crit;
+        public int m_crit;
         private int m_critMax;
         private bool m_isDead;
-        private int m_maxHealth;
         private string m_name;
         private int m_health;
         private int m_power;
