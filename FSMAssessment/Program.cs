@@ -26,7 +26,7 @@ namespace FSMAssessment
             Player CurrentPlayer = new Player();
             Player CurrentEnemy = new Player();
 
-            StateSystem<TurnStates> fsm = new StateSystem<TurnStates>();
+            GenFSM<TurnStates> fsm = new GenFSM<TurnStates>();
             TurnManager turnManager = new TurnManager();
 
             //sets information into singleton

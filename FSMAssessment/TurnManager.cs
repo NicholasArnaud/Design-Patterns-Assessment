@@ -5,7 +5,7 @@ namespace FSMAssessment
 {
     public class TurnManager
     {
-        
+        GameManager gm = GameManager.Instance;
         int playernum = 0;//The number of the current player in the list
 
         /// <summary>
@@ -22,11 +22,10 @@ namespace FSMAssessment
         /// </summary>
         public void ToStartUp()
         {
-
             Debug.WriteLine("Starting Up");
-            GameManager.Instance.currentState = "IDLE";
-            GameManager.Instance.CurrentPlayer = GameManager.Instance.Players[0];
-            GameManager.Instance.CurrentEnemy = GameManager.Instance.Players[1];
+            gm.currentState = "IDLE";
+            gm.CurrentPlayer = gm.Players[0];
+            gm.CurrentEnemy = gm.Players[1];
         }
 
         /// <summary>
@@ -34,32 +33,32 @@ namespace FSMAssessment
         /// </summary>
         public void ToIdle()
         {
-            GameManager gm = GameManager.Instance;
             Debug.WriteLine("Waiting...");
-            if (gm.CurrentPlayer.IsDead && playernum !=gm.Players.Count -1)
+            if (playernum != gm.Players.Count - 1)
             {
-                playernum += 1;
-                gm.combat.ChangePlayer(gm.Players[playernum]);
-                if (gm.CurrentEnemy.Name == gm.CurrentPlayer.Name || gm.CurrentPlayer.Name == gm.CurrentPlayer.Name && playernum != gm.Players.Count - 1)
+                if (gm.CurrentPlayer.IsDead)
                 {
                     playernum += 1;
                     gm.combat.ChangePlayer(gm.Players[playernum]);
+                    if (gm.CurrentEnemy.Name == gm.CurrentPlayer.Name || gm.CurrentPlayer.Name == gm.CurrentPlayer.Name && playernum != gm.Players.Count - 1)
+                    {
+                        playernum += 1;
+                        gm.combat.ChangePlayer(gm.Players[playernum]);
+                    }
                 }
-            }
-            if (gm.CurrentEnemy.IsDead && playernum != gm.Players.Count -1)
-            {
-                playernum += 1;
-                gm.combat.ChangeEnemy(gm.Players[playernum]);
-                if (gm.CurrentEnemy.Name == gm.CurrentPlayer.Name || gm.CurrentEnemy.Name == gm.CurrentEnemy.Name && playernum != gm.Players.Count - 1)
+                if (gm.CurrentEnemy.IsDead)
                 {
                     playernum += 1;
                     gm.combat.ChangeEnemy(gm.Players[playernum]);
+                    if (gm.CurrentEnemy.Name == gm.CurrentPlayer.Name || gm.CurrentEnemy.Name == gm.CurrentEnemy.Name && playernum != gm.Players.Count - 1)
+                    {
+                        playernum += 1;
+                        gm.combat.ChangeEnemy(gm.Players[playernum]);
+                    }
                 }
             }
-            if (playernum == gm.Players.Count -1)
-            {
+            else
                 CheckDead();
-            }
         }
 
         /// <summary>

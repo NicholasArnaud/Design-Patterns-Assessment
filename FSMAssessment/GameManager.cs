@@ -23,7 +23,7 @@ namespace FSMAssessment
         public TurnManager turnManager;
         public Player CurrentPlayer;
         public Player CurrentEnemy;
-        public StateSystem<TurnStates> stateSystem;
+        public GenFSM<TurnStates> stateSystem;
         public string currentState;
         public List<Player> Players;
     }

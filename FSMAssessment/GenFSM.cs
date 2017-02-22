@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace FSMAssessment
 {
 
-    public class StateSystem<T>
+    public class GenFSM<T>
     {
 
-        Dictionary<string, State> states;
+        Dictionary<string, List<State>> states;
 
-        public StateSystem()
+        public GenFSM()
         {
-            states = new Dictionary<string, State>();
+            states = new Dictionary<string, List<State>>();
             var v = Enum.GetValues(typeof(T));
             foreach (var e in v)
             {
@@ -32,5 +32,7 @@ namespace FSMAssessment
         {
             GameManager.Instance.currentState = states[s].ToString();
         }
+
+
     }
 }
