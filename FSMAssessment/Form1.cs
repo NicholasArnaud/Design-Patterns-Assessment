@@ -7,15 +7,6 @@ using System.Diagnostics;
 
 namespace FSMAssessment
 {
-    public enum TurnStates
-    {
-        INIT = 1,
-        IDLE = 2,
-        TURN = 3,
-        ATK = 4,
-        ENDTURN = 5,
-        EXIT = 9000,
-    }
     public partial class Form1 : Form
     {
         GameManager gm = GameManager.Instance; //Shortens code a little bit
@@ -29,10 +20,9 @@ namespace FSMAssessment
 
         void SetUpForm()
         {
-            GameManager.Instance.Players.Sort((emp1, emp2) => emp1.Speed.CompareTo(emp2.Speed));
-            GameManager.Instance.Players.Reverse();
-            GameManager.Instance.turnManager.ToStartUp();
-            GameManager.Instance.currentState = GameManager.Instance.stateSystem.Start();
+            gm.Players.Sort((emp1, emp2) => emp1.Speed.CompareTo(emp2.Speed));
+            gm.Players.Reverse();
+            gm.turnManager.ToStartUp();
             DataManager<List<Player>>.Serialize("ListofPlayersDefualt", GameManager.Instance.Players);
             UpdateUI();
         }
@@ -46,31 +36,36 @@ namespace FSMAssessment
         {
             Debug.WriteLine("Starting Up files...");
             StateFunctions();
-            GameManager.Instance.stateSystem.ChangeState("IDLE");
+            gm.GenFSM.TryTransition("IDLE");
         }
-        
+
         /// <summary>
-        /// Certain function is called depending on current state
+        /// Function that runs a case statement to run a function depending on state
         /// </summary>
         private void StateFunctions()
         {
-            switch (gm.currentState)
+            switch (gm.GenFSM.CurrentState.ToUpper())
             {
                 case "INIT":
                     HelpText();
                     gm.turnManager.ToStartUp();
+                    gm.GenFSM.CurrentState = "idle";
                     break;
                 case "IDLE":
                     gm.turnManager.ToIdle();
+                    gm.GenFSM.CurrentState = "turn";
                     break;
                 case "TURN":
                     gm.turnManager.ToChoosePlayer();
+                    gm.GenFSM.CurrentState = "atk";
                     break;
                 case "ATK":
                     gm.combat.ToEnter();
+                    gm.GenFSM.CurrentState = "endturn";
                     break;
                 case "ENDTURN":
                     gm.turnManager.ToEndTurn();
+                    gm.GenFSM.CurrentState = "idle";
                     break;
             }
             TextLog.SelectionStart = TextLog.Text.Length;
@@ -112,15 +107,16 @@ namespace FSMAssessment
         /// </summary>
         public void HelpText()
         {
-            UpdateLog("Welcome to Brightest Dungeon!");
-            UpdateLog("This is much simplier than Darkest Dungeon...");
-            UpdateLog("HOW TO PLAY:");
-            UpdateLog("-You are the player on the left and your enemy is on the right.");
-            UpdateLog("-To Attack your enemy, just press the attack button in the center.");
-            UpdateLog("-You can also choose to pass your turn and not attack.");
-            UpdateLog("-To heal your currrent player, just press the potion button to heal");
-            UpdateLog("-To save or load the game, you can press the two bottom buttons on the far left and right");
-            UpdateLog("-You can also restart your current game by pressing the reset button.");
+            MessageBox.Show("Welcome to Brightest Dungeon!\n" +
+            "This is much simplier than Darkest Dungeon...\n" +
+            "HOW TO PLAY:\n\n" +
+            "-You are the player on the left and your enemy is on the right.\n" +
+            "-To Attack your enemy, just press the attack button in the center.\n" +
+            "-You can also choose to pass your turn and not attack.\n" +
+            "-To heal your currrent player, just press the potion button to heal.\n" +
+            "-To save or load the game, you can press the two bottom buttons on the far left and right.\n" +
+            "-You can also restart your current game by pressing the reset button.\n");
+
         }
 
         /// <summary>
@@ -184,13 +180,15 @@ namespace FSMAssessment
         /// <param name="e"></param>
         private void AtkButton_Click(object sender, EventArgs e)
         {
-            gm.stateSystem.ChangeState("TURN");
+
+            gm.GenFSM.TryTransition("TURN");
             StateFunctions();
 
             Debug.WriteLine("Started Combat state...");
-            gm.stateSystem.ChangeState("ATK");
+            gm.GenFSM.TryTransition("ATK");
             StateFunctions();
-            gm.stateSystem.ChangeState("ENDTURN");
+
+            gm.GenFSM.TryTransition("ENDTURN");
             StateFunctions();
             UpdateUI();
             TextLog.Text = gm.combat.combatLog;
@@ -208,7 +206,7 @@ namespace FSMAssessment
                 gm.combat.PassAttack(gm.CurrentPlayer, gm.CurrentEnemy);
             else
                 gm.combat.PassAttack(gm.CurrentPlayer, gm.CurrentEnemy);
-            gm.stateSystem.ChangeState("ENDTURN");
+            gm.GenFSM.TryTransition("ENDTURN");
             StateFunctions();
 
             UpdateUI();
@@ -294,7 +292,7 @@ namespace FSMAssessment
             TextLog.Text = "Data has been reset...";
             Debug.WriteLine("Data has reset...");
         }
-        
+
         /// <summary>
         /// Redisplays how to play the game
         /// </summary>

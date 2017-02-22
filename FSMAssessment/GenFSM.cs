@@ -7,32 +7,58 @@ using System.Threading.Tasks;
 namespace FSMAssessment
 {
 
-    public class GenFSM<T>
+    public class GenFSM
     {
+        public List<string> States;
+        public List<string> Transitions;
+        public string CurrentState;
 
-        Dictionary<string, List<State>> states;
-
-        public GenFSM()
+        public GenFSM(string initialState)
         {
-            states = new Dictionary<string, List<State>>();
-            var v = Enum.GetValues(typeof(T));
-            foreach (var e in v)
+            States = new List<string>();
+            Transitions = new List<string>();
+            AddState(initialState);
+        }
+
+        void AddState(string state)
+        {
+            if (!States.Contains(state.ToUpper()))
+                States.Add(state.ToUpper());
+        }
+
+        public void AddTransitions(string from, string to, bool reversed)
+        {
+            if (States.Contains(from.ToUpper()) && States.Contains(to.ToUpper()))
             {
-                State s = new State(e as Enum);
-                states.Add(s.name, s);
+                string transition = CreateTransition(from, to);
+                TryAddTransition(transition);
+                if (reversed)
+                {
+                    transition = CreateTransition(to, from);
+                    TryAddTransition(transition);
+                }
             }
         }
 
-        public string Start()
+        public void TryTransition(string goal)
         {
-            return GameManager.Instance.currentState = "INIT";
+            if (States.Contains(goal.ToUpper()))
+            {
+                string transition = CreateTransition(CurrentState, goal);
+                if (Transitions.Contains(transition))
+                    CurrentState = goal;
+            }
         }
 
-        public void ChangeState(string s)
+        private void TryAddTransition(string transition)
         {
-            GameManager.Instance.currentState = states[s].ToString();
+            if (!Transitions.Contains(transition))
+                Transitions.Add(transition);
         }
 
-
+        private string CreateTransition(string from, string to)
+        {
+            return from.ToUpper() + ">" + to.ToUpper();
+        }
     }
 }

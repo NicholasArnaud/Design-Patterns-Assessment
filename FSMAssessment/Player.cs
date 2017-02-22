@@ -6,10 +6,32 @@ using System.Threading.Tasks;
 
 namespace FSMAssessment
 {
+    public enum TurnStates
+    {
+        INIT = 1,
+        IDLE = 2,
+        TURN = 3,
+        ATK = 4,
+        ENDTURN = 5,
+        EXIT = 9000,
+    }
+
     public class Player
     {
+        GenFSM gmFSM = GameManager.Instance.GenFSM; //Shortens code a little bit
+
         public Player()
         { //Constructor
+            gmFSM.States.Add(TurnStates.ENDTURN.ToString());
+            gmFSM.States.Add(TurnStates.EXIT.ToString());
+            gmFSM.States.Add(TurnStates.IDLE.ToString());
+            gmFSM.States.Add(TurnStates.TURN.ToString());
+            gmFSM.States.Add(TurnStates.ATK.ToString());
+            gmFSM.AddTransitions("Init", "idle", false);
+            gmFSM.AddTransitions("idle", "turn", false);
+            gmFSM.AddTransitions("turn", "atk", false);
+            gmFSM.AddTransitions("atk", "endturn", false);
+            gmFSM.AddTransitions("endturn", "idle", false);
         }
 
         public Player(string name, int power, float speed, int critmax)

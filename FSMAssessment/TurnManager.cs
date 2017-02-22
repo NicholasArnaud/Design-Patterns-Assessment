@@ -23,7 +23,7 @@ namespace FSMAssessment
         public void ToStartUp()
         {
             Debug.WriteLine("Starting Up");
-            gm.currentState = "IDLE";
+            gm.GenFSM.CurrentState = "IDLE";
             gm.CurrentPlayer = gm.Players[0];
             gm.CurrentEnemy = gm.Players[1];
         }
@@ -98,7 +98,7 @@ namespace FSMAssessment
         /// </summary>
         public void ToEndTurn()
         {
-            GameManager.Instance.currentState = "IDLE";
+            gm.GenFSM.CurrentState = "idle";
             ToIdle();
             Debug.WriteLine("Ending Turn");
         }
