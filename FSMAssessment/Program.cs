@@ -14,9 +14,12 @@ namespace FSMAssessment
         [STAThread]
         static void Main()
         {
+            //Creates everything used inside program
             GenFSM fsm = new GenFSM("INIT");
             GameManager.Instance.GenFSM = fsm;
             GameManager.Instance.Players = new List<Player>();
+            TurnManager turnManager = new TurnManager();
+
             //creates all the needed entities on the start of the process
             //Note: all players are automatically added to the list of players inside their constructor
             Player Swine = new Player("Infested Swine", 5, 3.4f, 6);
@@ -27,9 +30,6 @@ namespace FSMAssessment
             Player Syran = new Player("Syran", 5, 8.7f, 4);
             Player CurrentPlayer = new Player();
             Player CurrentEnemy = new Player();
-
-            TurnManager turnManager = new TurnManager();
-
 
             //sets information into singleton
 

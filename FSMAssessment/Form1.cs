@@ -108,15 +108,14 @@ namespace FSMAssessment
         public void HelpText()
         {
             MessageBox.Show("Welcome to Brightest Dungeon!\n" +
-            "This is much simplier than Darkest Dungeon...\n" +
-            "HOW TO PLAY:\n\n" +
+            "This is much simplier than Darkest Dungeon...\n\n" +
+            "HOW TO PLAY:\n" +
             "-You are the player on the left and your enemy is on the right.\n" +
             "-To Attack your enemy, just press the attack button in the center.\n" +
             "-You can also choose to pass your turn and not attack.\n" +
             "-To heal your currrent player, just press the potion button to heal.\n" +
             "-To save or load the game, you can press the two bottom buttons on the far left and right.\n" +
             "-You can also restart your current game by pressing the reset button.\n");
-
         }
 
         /// <summary>
@@ -283,13 +282,13 @@ namespace FSMAssessment
             //Loads the reseted data
             gm.CurrentPlayer = gm.Players[0];
             gm.CurrentEnemy = gm.Players[1];
-
+            
             UpdateUI();
 
             potionlimit = DataManager<int>.Deserialize("PotionUse");
             TextLog.Text = DataManager<string>.Deserialize("TextLog");
             EnableButtons();
-            TextLog.Text = "Data has been reset...";
+            TextLog.Text = "Data has been reset...\n";
             Debug.WriteLine("Data has reset...");
         }
 

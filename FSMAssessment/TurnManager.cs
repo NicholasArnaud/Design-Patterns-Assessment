@@ -6,7 +6,6 @@ namespace FSMAssessment
     public class TurnManager
     {
         GameManager gm = GameManager.Instance;
-        int playernum = 0;//The number of the current player in the list
 
         /// <summary>
         /// Tis but a constructor
@@ -34,28 +33,17 @@ namespace FSMAssessment
         public void ToIdle()
         {
             Debug.WriteLine("Waiting...");
-            if (playernum != gm.Players.Count - 1)
+            if (gm.CurrentPlayer.IsDead && gm.Players.IndexOf(gm.CurrentPlayer)!= gm.Players.Count -1)
             {
-                if (gm.CurrentPlayer.IsDead)
-                {
-                    playernum += 1;
-                    gm.combat.ChangePlayer(gm.Players[playernum]);
-                    if (gm.CurrentEnemy.Name == gm.CurrentPlayer.Name || gm.CurrentPlayer.Name == gm.CurrentPlayer.Name && playernum != gm.Players.Count - 1)
-                    {
-                        playernum += 1;
-                        gm.combat.ChangePlayer(gm.Players[playernum]);
-                    }
-                }
-                if (gm.CurrentEnemy.IsDead)
-                {
-                    playernum += 1;
-                    gm.combat.ChangeEnemy(gm.Players[playernum]);
-                    if (gm.CurrentEnemy.Name == gm.CurrentPlayer.Name || gm.CurrentEnemy.Name == gm.CurrentEnemy.Name && playernum != gm.Players.Count - 1)
-                    {
-                        playernum += 1;
-                        gm.combat.ChangeEnemy(gm.Players[playernum]);
-                    }
-                }
+                gm.CurrentPlayer = gm.Players[gm.Players.IndexOf(gm.CurrentPlayer)+1];
+                if(gm.CurrentPlayer == gm.CurrentEnemy)
+                    gm.CurrentPlayer = gm.Players[gm.Players.IndexOf(gm.CurrentPlayer) + 1];
+            }
+            else if (gm.CurrentEnemy.IsDead && gm.Players.IndexOf(gm.CurrentPlayer) != gm.Players.Count)
+            {
+                gm.CurrentEnemy = gm.Players[gm.Players.IndexOf(gm.CurrentEnemy) + 1];
+                if (gm.CurrentEnemy == gm.CurrentPlayer)
+                    gm.CurrentEnemy = gm.Players[gm.Players.IndexOf(gm.CurrentEnemy) + 1];
             }
             else
                 CheckDead();
