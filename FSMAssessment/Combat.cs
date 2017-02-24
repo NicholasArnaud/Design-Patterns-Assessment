@@ -4,7 +4,7 @@ namespace FSMAssessment
 {
     class Combat
     {
-        
+        GameManager gm = GameManager.Instance;
         private int turntoken = 0; //sets turn manager variables
         public string combatLog;        
 
@@ -21,7 +21,7 @@ namespace FSMAssessment
         /// <param name="p"> Player to set as the current player</param>
         public void ChangePlayer(Player p)
         {
-            GameManager.Instance.CurrentPlayer = p;
+            gm.CurrentPlayer = p;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace FSMAssessment
         /// <param name="e">Player to set as the current enemy</param>
         public void ChangeEnemy(Player e)
         {
-            GameManager.Instance.CurrentEnemy = e;
+            gm.CurrentEnemy = e;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace FSMAssessment
         /// </summary>
         public void ToEnter()
         {
-            GameManager gm = GameManager.Instance;
+            
             //enters the attack function depending on which enemy is active
             Debug.WriteLine("Entering Attack...");
             if (!gm.CurrentEnemy.IsDead && !gm.CurrentPlayer.IsDead)

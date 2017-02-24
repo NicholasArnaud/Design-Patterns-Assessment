@@ -12,10 +12,12 @@ namespace FSMAssessment
         [STAThread]
         static void Main()
         {
+            GameManager gm = GameManager.Instance;
+
             //Creates everything used inside program
             GenFSM fsm = new GenFSM("INIT");
-            GameManager.Instance.GenFSM = fsm;
-            GameManager.Instance.Players = new List<Player>();
+            gm.GenFSM = fsm;
+            gm.Players = new List<Player>();
             TurnManager turnManager = new TurnManager();
 
             //creates all the needed entities on the start of the process
@@ -31,13 +33,13 @@ namespace FSMAssessment
 
             //sets information into singleton
 
-            GameManager.Instance.CurrentPlayer = CurrentPlayer;
-            GameManager.Instance.CurrentEnemy = CurrentEnemy;
-            GameManager.Instance.turnManager = turnManager;
+            gm.CurrentPlayer = CurrentPlayer;
+            gm.CurrentEnemy = CurrentEnemy;
+            gm.turnManager = turnManager;
 
 
             Combat combat = new Combat();
-            GameManager.Instance.Combat = combat;
+            gm.Combat = combat;
 
 
             //Default

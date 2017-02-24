@@ -23,7 +23,7 @@ namespace FSMAssessment
             gm.Players.Sort((emp1, emp2) => emp1.Speed.CompareTo(emp2.Speed));
             gm.Players.Reverse();
             gm.turnManager.ToStartUp();
-            DataManager<List<Player>>.Serialize("ListofPlayersDefualt", GameManager.Instance.Players);
+            DataManager<List<Player>>.Serialize("ListofPlayersDefualt", gm.Players);
             UpdateUI();
         }
 
@@ -78,14 +78,14 @@ namespace FSMAssessment
         public void UpdateUI()
         {
             //Update Names
-            EnemyName.Text = GameManager.Instance.CurrentEnemy.Name;
-            PlayerName.Text = GameManager.Instance.CurrentPlayer.Name;
+            EnemyName.Text = gm.CurrentEnemy.Name;
+            PlayerName.Text = gm.CurrentPlayer.Name;
             //Update Health
-            PlayerHealth.Value = GameManager.Instance.CurrentPlayer.Health;
-            EnemyHealth.Value = GameManager.Instance.CurrentEnemy.Health;
+            PlayerHealth.Value = gm.CurrentPlayer.Health;
+            EnemyHealth.Value = gm.CurrentEnemy.Health;
             //Update Lvl
-            Playerlvl.Text = "LVL: " + GameManager.Instance.CurrentPlayer.Lvl.ToString();
-            Enemylvl.Text = "LVL: " + GameManager.Instance.CurrentEnemy.Lvl.ToString();
+            Playerlvl.Text = "LVL: " + gm.CurrentPlayer.Lvl.ToString();
+            Enemylvl.Text = "LVL: " + gm.CurrentEnemy.Lvl.ToString();
 
         }
 
@@ -124,17 +124,17 @@ namespace FSMAssessment
         /// </summary>
         public void Endlog()
         {
-            if (GameManager.Instance.turnManager.CheckWin() == true)
+            if (gm.turnManager.CheckWin() == true)
             {
                 AtkButton.Enabled = false;
                 PotionButton.Enabled = false;
                 PassTurn.Enabled = false;
-                if (GameManager.Instance.CurrentPlayer.IsDead)
+                if (gm.CurrentPlayer.IsDead)
                 {
                     UpdateLog("Mission Failed. We'll get'em next time...");
                     UpdateLog("Load a previous save or start over by pressing reset");
                 }
-                if (GameManager.Instance.CurrentEnemy.IsDead)
+                if (gm.CurrentEnemy.IsDead)
                 {
                     UpdateLog("Congratulations!");
                     UpdateLog("You defeated the Brightest Dungeon! Please play again.");
@@ -220,7 +220,7 @@ namespace FSMAssessment
         /// <param name="e"></param>
         private void Potion_Click(object sender, EventArgs e)
         {
-            PotionUse(GameManager.Instance.CurrentPlayer);
+            PotionUse(gm.CurrentPlayer);
             UpdateUI();
         }
 
