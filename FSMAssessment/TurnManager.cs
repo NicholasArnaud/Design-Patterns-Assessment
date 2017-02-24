@@ -57,10 +57,10 @@ namespace FSMAssessment
             Debug.WriteLine("Turn Order: ");
             // Lambda function to iterate through the entire length of the list and prints the order of 
             //players in the debugger
-            GameManager.Instance.Players.ForEach((x =>
-                Debug.WriteLine(GameManager.Instance.Players.IndexOf(x) + " " + x.ToString())));
-            Debug.WriteLine("Current Player is: " + GameManager.Instance.CurrentPlayer.Name);
-            Debug.WriteLine("Current Enemy is: " + GameManager.Instance.CurrentEnemy.Name);
+            gm.Players.ForEach((x =>Debug.WriteLine(gm.Players.IndexOf(x) + " " + x.ToString())));
+                
+            Debug.WriteLine("Current Player is: " +gm.CurrentPlayer.Name);
+            Debug.WriteLine("Current Enemy is: " + gm.CurrentEnemy.Name);
         }
 
         /// <summary>
@@ -77,11 +77,11 @@ namespace FSMAssessment
         /// <returns></returns>
         public bool CheckWin()
         {
-            if (GameManager.Instance.CurrentPlayer.IsDead == true)
+            if (gm.CurrentPlayer.IsDead == true)
             {
                 return true;
             }
-            if (GameManager.Instance.CurrentEnemy.IsDead == true)
+            if (gm.CurrentEnemy.IsDead == true)
             {
                 return true;
             }

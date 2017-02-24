@@ -113,7 +113,7 @@ namespace FSMAssessment
             "-You are the player on the left and your enemy is on the right.\n" +
             "-To Attack your enemy, just press the attack button in the center.\n" +
             "-You can also choose to pass your turn and not attack.\n" +
-            "-To heal your currrent player, just press the potion button to heal.\n" +
+            "-To heal your current player, just press the potion button to heal.\n" +
             "-To save or load the game, you can press the two bottom buttons on the far left and right.\n" +
             "-You can also restart your current game by pressing the reset button.\n");
         }
@@ -278,6 +278,7 @@ namespace FSMAssessment
             gm.Players = DataManager<List<Player>>.Deserialize("ListofPlayersDefualt");
             DataManager<string>.Serialize("Textlog", TextLog.Text = "");
             DataManager<int>.Serialize("PotionUse", potionlimit = 0);
+           
 
             //Loads the reseted data
             gm.CurrentPlayer = gm.Players[0];
