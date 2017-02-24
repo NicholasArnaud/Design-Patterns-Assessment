@@ -60,7 +60,7 @@ namespace FSMAssessment
                     gm.GenFSM.CurrentState = "atk";
                     break;
                 case "ATK":
-                    gm.combat.ToEnter();
+                    gm.turnManager.ToCombat();
                     gm.GenFSM.CurrentState = "endturn";
                     break;
                 case "ENDTURN":
@@ -124,7 +124,7 @@ namespace FSMAssessment
         /// </summary>
         public void Endlog()
         {
-            if (GameManager.Instance.turnManager.CheckDead() == true)
+            if (GameManager.Instance.turnManager.CheckWin() == true)
             {
                 AtkButton.Enabled = false;
                 PotionButton.Enabled = false;
@@ -190,7 +190,7 @@ namespace FSMAssessment
             gm.GenFSM.TryTransition("ENDTURN");
             StateFunctions();
             UpdateUI();
-            TextLog.Text = gm.combat.combatLog;
+            TextLog.Text = gm.Combat.combatLog;
             Endlog();
         }
 
@@ -202,14 +202,14 @@ namespace FSMAssessment
         private void PassTurn_Click(object sender, EventArgs e)
         {
             if (!gm.CurrentEnemy.IsDead)
-                gm.combat.PassAttack(gm.CurrentPlayer, gm.CurrentEnemy);
+                gm.Combat.PassAttack(gm.CurrentPlayer, gm.CurrentEnemy);
             else
-                gm.combat.PassAttack(gm.CurrentPlayer, gm.CurrentEnemy);
+                gm.Combat.PassAttack(gm.CurrentPlayer, gm.CurrentEnemy);
             gm.GenFSM.TryTransition("ENDTURN");
             StateFunctions();
 
             UpdateUI();
-            TextLog.Text = gm.combat.combatLog;
+            TextLog.Text = gm.Combat.combatLog;
             Endlog();
         }
 

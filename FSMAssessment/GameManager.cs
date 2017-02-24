@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace FSMAssessment
 {
@@ -10,20 +6,33 @@ namespace FSMAssessment
     {
         //Singleton class
         private static GameManager instance = null;
+
         private GameManager()
         {
             //Constructor
         }
+
+        /// <summary>
+        /// Singleton referencer
+        /// </summary>
         public static GameManager Instance
         {
-            get { if (instance == null) { instance = new GameManager(); } return instance; }
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new GameManager();
+                }
+                return instance;
+            }
         }
 
-        public Combat combat;
-        public TurnManager turnManager;
-        public Player CurrentPlayer;
-        public Player CurrentEnemy;
-        public GenFSM GenFSM;
-        public List<Player> Players;
+        //Objects to be called from the class throughout the project
+        public Combat Combat; //Singleton call for Combat FSM 
+        public TurnManager turnManager; //Singleton call for TurnManager class
+        public Player CurrentPlayer; //Singleton call for current player
+        public Player CurrentEnemy; //Singleton call for current enemy
+        public GenFSM GenFSM; //Singleton call for Generic FSM
+        public List<Player> Players; //Singleton call for list of players
     }
 }

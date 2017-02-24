@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FSMAssessment
 {
@@ -34,6 +30,13 @@ namespace FSMAssessment
             gmFSM.AddTransitions("endturn", "idle", false);
         }
 
+        /// <summary>
+        /// Creates Player with given values
+        /// </summary>
+        /// <param name="name">Sets player name</param>
+        /// <param name="power">Sets player damage</param>
+        /// <param name="speed">Sets player speed</param>
+        /// <param name="critmax">Sets player max added damage</param>
         public Player(string name, int power, float speed, int critmax)
         {
             //sets all variables for the player on creation
@@ -89,12 +92,20 @@ namespace FSMAssessment
             set { m_lvl = value; }
         }
 
-
+        /// <summary>
+        /// When running the "ToString()" function.
+        /// The function will return the name of a player that called it
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return m_name;
         }
-
+        
+        /// <summary>
+        /// Allows a player to lose health when attacked
+        /// </summary>
+        /// <param name="amount">Total amount of damage taken from an enemy</param>
         public void TakeDamage(int amount)
         {
             m_health -= amount;
@@ -106,11 +117,20 @@ namespace FSMAssessment
 
         }
 
+        /// <summary>
+        /// Runs when the "Potion" button is pressed
+        /// Heals the current player to full health
+        /// </summary>
+        /// <param name="amount">Amount taken from the max health subtracted with the current health</param>
         public void Heal(int amount)
         {
             m_health += amount;
         }
 
+        /// <summary>
+        /// Called from the attack fsm to do damage calculations
+        /// </summary>
+        /// <param name="target">The targeted player</param>
         public void Attack(Player target)
         {
             Random rnd = new Random();
@@ -119,6 +139,9 @@ namespace FSMAssessment
             target.TakeDamage(damage);
         }
 
+        /// <summary>
+        /// Levels up a player that killed an enemy
+        /// </summary>
         public void Lvling()
         {
             m_health += 100 - m_health;

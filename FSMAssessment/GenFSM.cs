@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace FSMAssessment
 {
@@ -11,12 +7,12 @@ namespace FSMAssessment
     {
         public List<string> States; //List of states
         public List<string> Transitions; //List of transitions 
-        public string CurrentState; //current state the fsm is in
+        public string CurrentState; //Current state the fsm is in
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="initialState"></param>
+        /// <param name="initialState">The starting state of the program</param>
         public GenFSM(string initialState)
         {
             States = new List<string>();
@@ -28,7 +24,7 @@ namespace FSMAssessment
         /// Adds a state to the list of states and if its already in the list it
         /// won't be added
         /// </summary>
-        /// <param name="state"></param>
+        /// <param name="state">Added state to the states list</param>
         void AddState(string state)
         {
             if (!States.Contains(state.ToUpper()))
@@ -39,9 +35,9 @@ namespace FSMAssessment
         /// Creates a transition of two states if the transition isn't already defined
         /// and the two states are valid inside the list of states
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="reversed"></param>
+        /// <param name="from">Current state</param>
+        /// <param name="to">Destination state</param>
+        /// <param name="reversed">Adds a return for the states in list</param>
         public void AddTransitions(string from, string to, bool reversed)
         {
             if (States.Contains(from.ToUpper()) && States.Contains(to.ToUpper()))
@@ -60,7 +56,7 @@ namespace FSMAssessment
         /// Checks the list of states and then checks to see if the transition is 
         /// valid from the current state to the next state then will change to the destination state
         /// </summary>
-        /// <param name="goal"></param>
+        /// <param name="goal">State to reach</param>
         public void TryTransition(string goal)
         {
             if (States.Contains(goal.ToUpper()))
@@ -74,7 +70,7 @@ namespace FSMAssessment
         /// <summary>
         /// Adds a transition to the list of transitions
         /// </summary>
-        /// <param name="transition"></param>
+        /// <param name="transition">Transition to add to list</param>
         private void TryAddTransition(string transition)
         {
             if (!Transitions.Contains(transition))
@@ -84,8 +80,8 @@ namespace FSMAssessment
         /// <summary>
         /// Creates a transition as strings
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="from">The current state</param>
+        /// <param name="to">The destination state</param>
         /// <returns></returns>
         private string CreateTransition(string from, string to)
         {

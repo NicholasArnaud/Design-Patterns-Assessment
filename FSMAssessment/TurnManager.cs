@@ -1,11 +1,10 @@
-﻿
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace FSMAssessment
 {
     public class TurnManager
     {
-        GameManager gm = GameManager.Instance;
+        GameManager gm = GameManager.Instance; //Shortens code a bit
 
         /// <summary>
         /// Tis but a constructor
@@ -36,17 +35,17 @@ namespace FSMAssessment
             if (gm.CurrentPlayer.IsDead && gm.Players.IndexOf(gm.CurrentPlayer)!= gm.Players.Count -1)
             {
                 gm.CurrentPlayer = gm.Players[gm.Players.IndexOf(gm.CurrentPlayer)+1];
-                if(gm.CurrentPlayer == gm.CurrentEnemy)
+                if(gm.CurrentPlayer == gm.CurrentEnemy && gm.Players.IndexOf(gm.CurrentPlayer) != gm.Players.Count - 1)
                     gm.CurrentPlayer = gm.Players[gm.Players.IndexOf(gm.CurrentPlayer) + 1];
             }
-            else if (gm.CurrentEnemy.IsDead && gm.Players.IndexOf(gm.CurrentPlayer) != gm.Players.Count)
+            else if (gm.CurrentEnemy.IsDead && gm.Players.IndexOf(gm.CurrentEnemy) != gm.Players.Count -1)
             {
                 gm.CurrentEnemy = gm.Players[gm.Players.IndexOf(gm.CurrentEnemy) + 1];
-                if (gm.CurrentEnemy == gm.CurrentPlayer)
+                if (gm.CurrentEnemy == gm.CurrentPlayer && gm.Players.IndexOf(gm.CurrentPlayer) != gm.Players.Count - 1)
                     gm.CurrentEnemy = gm.Players[gm.Players.IndexOf(gm.CurrentEnemy) + 1];
             }
             else
-                CheckDead();
+                CheckWin();
         }
 
         /// <summary>
@@ -65,10 +64,18 @@ namespace FSMAssessment
         }
 
         /// <summary>
+        /// Enters Combat FSM
+        /// </summary>
+        public void ToCombat()
+        {
+            gm.Combat.ToEnter();
+        }
+
+        /// <summary>
         /// Simple function that checks if the last current player is dead
         /// </summary>
         /// <returns></returns>
-        public bool CheckDead()
+        public bool CheckWin()
         {
             if (GameManager.Instance.CurrentPlayer.IsDead == true)
             {

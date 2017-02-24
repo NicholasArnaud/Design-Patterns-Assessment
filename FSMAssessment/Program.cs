@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FSMAssessment
@@ -22,12 +20,12 @@ namespace FSMAssessment
 
             //creates all the needed entities on the start of the process
             //Note: all players are automatically added to the list of players inside their constructor
-            Player Swine = new Player("Infested Swine", 5, 3.4f, 6);
-            Player Doomsday = new Player("Doomsday", 6, 5.5f, 4);
+            Player Swine = new Player("Infested Swine", 6, 3.4f, 12);
+            Player Doomsday = new Player("Doomsday", 7, 5.5f, 5);
             Player Aries = new Player("Aries", 2, 7.8f, 7);
-            Player Jingles = new Player("Jester", 3, 10.3f, 5);
+            Player Jingles = new Player("Jester", 3, 10.3f, 9);
             Player Vyral = new Player("Vyral", 4, 6, 2);
-            Player Syran = new Player("Syran", 5, 8.7f, 4);
+            Player Syran = new Player("Syran", 6, 8.7f, 3);
             Player CurrentPlayer = new Player();
             Player CurrentEnemy = new Player();
 
@@ -39,7 +37,7 @@ namespace FSMAssessment
 
 
             Combat combat = new Combat();
-            GameManager.Instance.combat = combat;
+            GameManager.Instance.Combat = combat;
 
 
             //Default

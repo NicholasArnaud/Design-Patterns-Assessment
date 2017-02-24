@@ -1,29 +1,42 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace FSMAssessment
 {
     class Combat
     {
-        //sets turn manager variables
-        private int turntoken = 0;
+        
+        private int turntoken = 0; //sets turn manager variables
         public string combatLog;        
 
+        /// <summary>
+        /// Tis but a constuctor
+        /// </summary>
         public Combat()
         {
-            //Constructor
         }
-
+        
+        /// <summary>
+        /// Takes in the player in the argument to set as the current player
+        /// </summary>
+        /// <param name="p"> Player to set as the current player</param>
         public void ChangePlayer(Player p)
         {
             GameManager.Instance.CurrentPlayer = p;
         }
 
+        /// <summary>
+        /// Takes in the enemy in the argument to set as the current player
+        /// </summary>
+        /// <param name="e">Player to set as the current enemy</param>
         public void ChangeEnemy(Player e)
         {
             GameManager.Instance.CurrentEnemy = e;
         }
 
+        /// <summary>
+        /// Checks to see if any player is dead then goes to the attack function with both 
+        /// current players
+        /// </summary>
         public void ToEnter()
         {
             GameManager gm = GameManager.Instance;
@@ -35,6 +48,12 @@ namespace FSMAssessment
                 return;
         }
 
+        /// <summary>
+        /// Runs when player presses the "Pass Turn" button and the enemy attacks 
+        /// the current player
+        /// </summary>
+        /// <param name="player">Current player</param>
+        /// <param name="target">Current enemy</param>
         public void PassAttack(Player player, Player target)
         {
             //Runs just the enemy's attack 
@@ -50,6 +69,13 @@ namespace FSMAssessment
             ToExit();
         }
 
+        /// <summary>
+        /// Checks and runs the attack functions for each the current player
+        /// and current enemy while adding text for the combat log
+        /// Goes to ToDeath function if a player died
+        /// </summary>
+        /// <param name="current">Current player</param>
+        /// <param name="target">Current enemy</param>
         public void ToAttack(Player current, Player target)
         {
             //checks to make sure current player and target enemy isn't dead
@@ -84,6 +110,12 @@ namespace FSMAssessment
                 ToExit();
         }
 
+        /// <summary>
+        /// Prints to combat log who died and runs lvling function
+        /// to level up the player who survived
+        /// </summary>
+        /// <param name="current">Dead player</param>
+        /// <param name="target">Surviving player</param>
         public void ToDeath(Player current,Player target)
         {
             Debug.WriteLine("A player is Dead");
@@ -95,6 +127,9 @@ namespace FSMAssessment
             ToExit();
         }
 
+        /// <summary>
+        /// Leaves the combat class
+        /// </summary>
         public void ToExit()
         {
             //simply states that the combat state is over
